@@ -1,0 +1,59 @@
+services:
+  bot:
+    container_name: bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 8; done; python -m src.bot_main'
+    env_file:
+      - .env
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: '10'
+        max-size: '200k'
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://admin:admin@postgres:5432/admin
+
+  database_create:
+    container_name: database_create
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 3; done; python -m src.database.main'
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://admin:admin@postgres:5432/admin
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=admin
+      - log_destination=stderr
+    ports:
+      - '5432:5432'
+    networks:
+      - backend
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  pgdata:
+

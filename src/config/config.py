@@ -10,8 +10,9 @@ else:
 
 DATABASE_URL: str = cast(str, os.getenv("DATABASE_URL"))
 BOT_TOKEN: str = cast(str, os.getenv("BOT_TOKEN"))
+POLLINATIONS_TOKEN: str = cast(str, os.getenv("POLLINATIONS_TOKEN"))
 
-DEFAULT_COMMANDS = (
+DEFAULT_COMMANDS: tuple = (
     ("start", "Запустить бота"),
     ("help", "Справка"),
     ("picture", "Генерация изображений"),

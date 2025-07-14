@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardRemove
 
 from src.config.config import DEFAULT_COMMANDS
+from src.database.database_func import insert_new_user
 
 start_router = Router()
 
@@ -20,3 +21,4 @@ async def command_start(message: Message, state: FSMContext):
         f"{commands}",
         reply_markup=ReplyKeyboardRemove(),
     )
+    await insert_new_user(message.from_user.id)
