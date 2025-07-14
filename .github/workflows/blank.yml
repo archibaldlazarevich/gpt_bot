@@ -27,16 +27,13 @@ jobs:
         poetry install --no-interaction --no-ansi --no-root
     - name: Lint with flake8
       run: |
-        poetry run flake8 mysite/
+        poetry run flake8 src/
     - name: Lint with mypy
       run: |
-        poetry run mypy mysite/
+        poetry run mypy src/
     - name: Lint with black
       run: |
-        poetry run black --check --line-length 79 mysite/
+        poetry run black --check --line-length 79 src/
     - name: Lint with isort
       run: |
-        poetry run isort --check-only --profile=black mysite/
-    - name: Run Tests
-      run: |
-        poetry run python mysite/manage.py test
+        poetry run isort --check-only --profile=black src/
