@@ -5,8 +5,10 @@ description = ""
 authors = [
     {name = "Artur_Lazarevich",email = "compact20002008@gmail.com"}
 ]
-readme = "README.md"
 requires-python = ">=3.12"
+packages = [
+    { include = "src" }
+]
 dependencies = [
     "aiogram (>=3.21.0,<4.0.0)",
     "dotenv (>=0.9.9,<0.10.0)",
@@ -15,7 +17,9 @@ dependencies = [
     "mypy (>=1.16.1,<2.0.0)",
     "isort (>=6.0.1,<7.0.0)",
     "sqlalchemy (>=2.0.41,<3.0.0)",
-    "aiosqlite (>=0.21.0,<0.22.0)"
+    "aiosqlite (>=0.21.0,<0.22.0)",
+    "asyncpg (>=0.30.0,<0.31.0)",
+    "types-requests (>=2.32.4.20250611,<3.0.0.0)"
 ]
 
 
@@ -28,6 +32,7 @@ line-length = 79
 
 [tool.isort]
 profile = "black"
+
 
 [tool.mypy]
 ignore_missing_imports = true

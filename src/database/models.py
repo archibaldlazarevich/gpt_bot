@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer
+from sqlalchemy import Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.sql.schema import ForeignKey
 
@@ -23,6 +23,7 @@ class Monitor(Base):
     """
     Модель дляхранения данных моделей разрешений
     """
+
     __tablename__ = "monitor"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
@@ -46,6 +47,7 @@ class User(Base):
     """
     Модель для пользователя
     """
+
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
     tel_id: Mapped[int] = mapped_column(Integer, nullable=False)

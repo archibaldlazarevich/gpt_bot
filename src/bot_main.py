@@ -33,7 +33,9 @@ async def start_bot():
 
 
 async def main():
-    dp.include_routers(start_router, help_router, picture_router, text_router, audio_router)
+    dp.include_routers(
+        start_router, help_router, picture_router, text_router, audio_router
+    )
     dp.startup.register(start_bot)
     dp.message.middleware(Middleware())
     try:

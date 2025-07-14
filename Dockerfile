@@ -4,12 +4,11 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY requirements.txt ./
 RUN apt-get update && \
-    pip install --upgrade pip "poetry == 1.8.2"
+    pip install --upgrade pip "poetry == 2.1.3"
 RUN poetry config virtualenvs.create false --local
 COPY pyproject.toml poetry.lock ./
-RUN poetry install
+RUN poetry install --no-root
 
 
 COPY src/ src/

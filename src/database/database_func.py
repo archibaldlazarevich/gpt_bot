@@ -1,10 +1,10 @@
 import logging
 
-from sqlalchemy import select, update, insert
-from sqlalchemy.orm import joinedload, DeclarativeBase
+from sqlalchemy import insert, select, update
+from sqlalchemy.orm import joinedload
 
 from src.database.create_db import get_db_session
-from src.database.models import Monitor, Text, User, Picture
+from src.database.models import Monitor, Picture, Text, User
 
 
 async def check_text_data(tel_id: int) -> str | None:
@@ -76,7 +76,7 @@ async def get_resolution_w_h(res: str) -> tuple:
     return result.width, result.height
 
 
-async def get_resolution_data(res: str) -> DeclarativeBase | None:
+async def get_resolution_data(res: str) -> Monitor | None:
     """
     Метод возвращает данных о выбранном разрешении по коду
     :return:
@@ -89,19 +89,21 @@ async def get_resolution_data(res: str) -> DeclarativeBase | None:
     return result
 
 
-async def get_picture_models(model:str) -> DeclarativeBase | None:
+async def get_picture_models(model: str) -> Picture | None:
     """
     Метод для
     :param model:
     :return:
     """
     async with get_db_session() as session:
-        result_data = await session.execute(select(Picture).where(Picture.value == model))
+        result_data = await session.execute(
+            select(Picture).where(Picture.value == model)
+        )
         result = result_data.scalar_one_or_none()
     return result
 
 
-async def update_user_data_picture(tel_id: int, res: str, model:str):
+async def update_user_data_picture(tel_id: int, res: str, model: str):
     """
     Метод для
     :param model:
@@ -110,28 +112,29 @@ async def update_user_data_picture(tel_id: int, res: str, model:str):
     :return:
     """
     resolution = await get_resolution_data(res=res)
-    picture = await get_picture_models(model= model)
+    picture = await get_picture_models(model=model)
     if resolution and picture:
         async with get_db_session() as session:
             await session.execute(
                 update(User)
                 .where(User.tel_id == tel_id)
-                .values(monitor=resolution.id,
-                        picture = picture.id)
+                .values(monitor=resolution.id, picture=picture.id)
             )
             await session.commit()
     else:
         logging.warning('Error with db in "update_user_data_picture"')
 
 
-async def get_text_model(text_model: str) -> DeclarativeBase | None:
+async def get_text_model(text_model: str) -> Text | None:
     """
     Метод для возврата сущности текстовой модели
     :param text_model:
     :return:
     """
     async with get_db_session() as session:
-        result_data = await session.execute(select(Text).where(Text.value == text_model))
+        result_data = await session.execute(
+            select(Text).where(Text.value == text_model)
+        )
         result = result_data.scalar_one_or_none()
     return result
 
@@ -144,14 +147,16 @@ async def update_user_data_text(tel_id: int, text_model: str) -> None:
     :return:
     """
     text = await get_text_model(text_model=text_model)
-    async with get_db_session() as session:
-        await session.execute(
-            update(User)
-            .where(User.tel_id == tel_id)
-            .values(text=text.id,
-                    )
-        )
-        await session.commit()
+    if text:
+        async with get_db_session() as session:
+            await session.execute(
+                update(User)
+                .where(User.tel_id == tel_id)
+                .values(
+                    text=text.id,
+                )
+            )
+            await session.commit()
 
 
 async def get_all_text_model() -> list:
@@ -183,5 +188,5 @@ async def insert_new_user(tel_id: int) -> None:
     :return:
     """
     async with get_db_session() as session:
-        await session.execute(insert(User).values(tel_id = tel_id))
+        await session.execute(insert(User).values(tel_id=tel_id))
         await session.commit()

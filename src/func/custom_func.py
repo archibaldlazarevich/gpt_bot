@@ -2,7 +2,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardRemove
 
 
-async def send_keyboard(message: Message, state: FSMContext, state_data: str) -> None:
+async def send_keyboard(
+    message: Message, state: FSMContext, state_data: str
+) -> None:
     """
     Метод для отправки корректной клавиатуры
     :param state_data: текущее состояние в текстовом виде
@@ -10,7 +12,7 @@ async def send_keyboard(message: Message, state: FSMContext, state_data: str) ->
     :param state: состояние
     :return:
     """
-    state_data = state_data.split(sep=':')[1]
+    state_data = state_data.split(sep=":")[1]
     reply_data = await state.get_value(state_data)
     if reply_data:
         await message.answer(
@@ -22,6 +24,7 @@ async def send_keyboard(message: Message, state: FSMContext, state_data: str) ->
             "Ошибка в работе Бота.", reply_markup=ReplyKeyboardRemove()
         )
 
+
 async def db_error(message: Message, state: FSMContext) -> None:
     """
     Метод для отправки сообщения об ошибке в базе данных
@@ -30,7 +33,10 @@ async def db_error(message: Message, state: FSMContext) -> None:
     :return:
     """
     await state.clear()
-    await message.answer('Ошибка в работе базы данных', reply_markup=ReplyKeyboardRemove())
+    await message.answer(
+        "Ошибка в работе базы данных", reply_markup=ReplyKeyboardRemove()
+    )
+
 
 async def send_text_message(message: Message, text: str) -> None:
     """
@@ -40,5 +46,4 @@ async def send_text_message(message: Message, text: str) -> None:
     :return:
     """
     for i in range(0, len(text), 4096):
-        await message.answer(text[i:i + 4096])
-
+        await message.answer(text[i : i + 4096])  # noqa: E203

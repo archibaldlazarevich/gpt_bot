@@ -12,6 +12,7 @@ start_router = Router()
 @start_router.message(CommandStart())
 async def command_start(message: Message, state: FSMContext):
     await state.clear()
+    assert message.from_user is not None
     commands = "\n".join(
         [f"/{command[0]} - {command[1]}" for command in DEFAULT_COMMANDS]
     )

@@ -61,7 +61,9 @@ async def create_db() -> None:
     :return:
     """
     text_data: list | None = await get_all_picture_models(model_data="text")
-    picture_data: list | None = await get_all_picture_models(model_data="picture")
+    picture_data: list | None = await get_all_picture_models(
+        model_data="picture"
+    )
     if text_data and picture_data:
         text: list = [Text(value=i) for i in text_data]
         picture: list = [Picture(value=i) for i in picture_data]
@@ -79,5 +81,7 @@ async def create_db() -> None:
             session.add_all(monitor)
             session.add_all(picture)
     else:
-        logging.warning(msg="Ошибка при формировании базы данных, во"
-            " время запроса о текстовых и картинкогенерирующих моделях.")
+        logging.warning(
+            msg="Ошибка при формировании базы данных, во"
+            " время запроса о текстовых и картинкогенерирующих моделях."
+        )

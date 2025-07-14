@@ -29,14 +29,21 @@ async def init_audio(message: Message, state: FSMContext):
 
 @audio_router.message(Audio.init)
 async def create_audio(message: Message, state: FSMContext):
-    await create_new_audio(user_id=message.from_user.id, text=message.text)
-    await message.answer(
-        "Результат генерации:", reply_markup=ReplyKeyboardRemove()
-    )
-    file = FSInputFile(
-        path=(f"{message.from_user.id}.mp3"),
-        filename=f"{message.from_user.id}.mp3",
-    )
-    await message.reply_audio(audio=file)
+    assert message.text is not None
+    assert message.from_user is not None
     await state.clear()
-    os.remove(f"{message.from_user.id}.mp3")
+    if await create_new_audio(user_id=message.from_user.id, text=message.text):
+        await message.answer(
+            "Результат генерации:", reply_markup=ReplyKeyboardRemove()
+        )
+        file = FSInputFile(
+            path=(f"{message.from_user.id}.mp3"),
+            filename=f"{message.from_user.id}.mp3",
+        )
+        await message.reply_audio(audio=file)
+        os.remove(f"{message.from_user.id}.mp3")
+    else:
+        await message.answer(
+            "Выберите другую модель ИИ, с текущей возникли проблемы.",
+            reply_markup=ReplyKeyboardRemove(),
+        )

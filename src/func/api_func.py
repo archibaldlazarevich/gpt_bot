@@ -1,4 +1,3 @@
-import asyncio
 import urllib
 
 import requests
@@ -13,7 +12,8 @@ urls = {
 
 async def get_all_picture_models(model_data: str) -> list | None:
     """
-    Функция по получению данный от API по всем доступным моделям для генерации изображнеий
+    Функция по получению данный от API по всем доступным
+    моделям для генерации изображнеий
     :param model_data: тип моделей text для текстовых, picture для изображний
     :return:
     """
@@ -35,8 +35,6 @@ async def get_all_picture_models(model_data: str) -> list | None:
     except Exception:
         return None
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching text models: {e}")
 
 async def create_new_picture(user_id: int, text: str, res: tuple, model: str):
     """
@@ -54,7 +52,7 @@ async def create_new_picture(user_id: int, text: str, res: tuple, model: str):
         "seed": 42,
         "model": model,
         "nologo": "true",
-        'token': POLLINATIONS_TOKEN,
+        "token": POLLINATIONS_TOKEN,
     }
     encoded_prompt = urllib.parse.quote(text)
     url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
@@ -70,7 +68,7 @@ async def create_new_picture(user_id: int, text: str, res: tuple, model: str):
         return False
 
 
-async def create_new_text( text: str, model: str) -> str:
+async def create_new_text(text: str, model: str) -> str:
     """
     Функция для создания текста исходя из промпта (text)
     :param model: модель AI
@@ -78,22 +76,15 @@ async def create_new_text( text: str, model: str) -> str:
     :return:
     """
 
-    params = {
+    params: dict = {
         "model": model,
         "seed": 42,
-        'token': POLLINATIONS_TOKEN,
+        "token": POLLINATIONS_TOKEN,
     }
     encoded_prompt = urllib.parse.quote(text)
-    encoded_system = (
-        urllib.parse.quote(params.get("system", ""))
-        if "system" in params
-        else None
-    )
 
     url = f"https://text.pollinations.ai/{encoded_prompt}"
     query_params = {k: v for k, v in params.items() if k != "system"}
-    if encoded_system:
-        query_params["system"] = encoded_system
 
     try:
         response = requests.get(url, params=query_params)
@@ -101,7 +92,7 @@ async def create_new_text( text: str, model: str) -> str:
         return response.text
 
     except requests.exceptions.RequestException:
-        return "Ошибка в работе системы."
+        return "Выберите другую модель ИИ, с текущей возникли проблемы."
 
 
 async def create_new_audio(user_id, text: str):
@@ -115,7 +106,11 @@ async def create_new_audio(user_id, text: str):
 
     encoded_text = urllib.parse.quote(text)
     url = f"https://text.pollinations.ai/{encoded_text}"
-    params = {"model": "openai-audio", "voice": "echo", 'token': POLLINATIONS_TOKEN,}
+    params = {
+        "model": "openai-audio",
+        "voice": "echo",
+        "token": POLLINATIONS_TOKEN,
+    }
 
     try:
         response = requests.get(url, params=params)
