@@ -26,7 +26,6 @@
   POLLINATIONS_TOKEN = токен, который вы можете получить на pollinations.ai
   DATABASE_URL = ...(пример - "sqlite+aiosqlite:///base.db")
 
-
 4. **Запустите :**
     
     python -m src.main
