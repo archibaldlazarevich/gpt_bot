@@ -21,7 +21,7 @@
 
 3. **Настройте переменные окружения:**
   Создайте файл `.env` используя .env.template и добавьте токен бота и конфигурацию базы данных:
-  ```
+   
   BOT_TOKEN = ...
   POLLINATIONS_TOKEN = токен, который вы можете получить на pollinations.ai
   DATABASE_URL = ...(пример - "sqlite+aiosqlite:///base.db")
