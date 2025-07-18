@@ -50,7 +50,7 @@ class User(Base):
 
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
-    tel_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    tel_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
     text: Mapped[int] = mapped_column(
         ForeignKey("text.id", ondelete="CASCADE"), nullable=True
     )
